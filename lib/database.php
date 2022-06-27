@@ -11,10 +11,10 @@ class database {
     private $connection;
 
     public function __construct() {
-       $this->connectie = mysqli_connect(HOST, 
-                                         DATABASE, 
+       $this->connection = mysqli_connect(HOST, 
                                          USER, 
-                                         PASSWORD);                                
+                                         PASSWORD,
+                                         DATABASE);                                
     }
 
     public function getConnection() {
