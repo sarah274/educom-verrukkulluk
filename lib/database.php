@@ -14,11 +14,12 @@ class database {
        $this->connectie = mysqli_connect(HOST, 
                                          DATABASE, 
                                          USER, 
-                                         PASSWORD);
+                                         PASSWORD);                                
     }
 
     public function getConnection() {
         return($this->connection);
+        
     }
 
 }
