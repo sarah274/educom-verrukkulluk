@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Jun 27, 2022 at 08:54 AM
+-- Generation Time: Jun 28, 2022 at 07:20 AM
 -- Server version: 5.7.34
 -- PHP Version: 7.4.21
 
@@ -29,12 +29,26 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `artikel` (
   `id` int(11) NOT NULL,
-  `naam` int(11) NOT NULL,
-  `omschrijving` int(11) NOT NULL,
+  `naam` varchar(500) NOT NULL,
+  `omschrijving` text NOT NULL,
   `prijs` int(11) NOT NULL,
   `eenheid` int(11) NOT NULL,
   `verpakking` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `artikel`
+--
+
+INSERT INTO `artikel` (`id`, `naam`, `omschrijving`, `prijs`, `eenheid`, `verpakking`) VALUES
+(1, 'Vegan Burger Bun', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. ', 2, 1, 4),
+(2, 'Vegan Burger', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. ', 3, 1, 1),
+(3, 'Vegan Burger Sauce', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. ', 2, 1, 1),
+(4, 'Sushi', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. ', 3, 1, 1),
+(5, 'Salmon', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. ', 5, 1, 1),
+(6, 'Egg', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. ', 3, 2, 2),
+(7, 'Pizza Deeg', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. ', 2, 1, 1),
+(8, 'Tomato', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. ', 2, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -83,15 +97,26 @@ CREATE TABLE `gerecht_info` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ingredients`
+-- Table structure for table `ingredient`
 --
 
-CREATE TABLE `ingredients` (
+CREATE TABLE `ingredient` (
   `id` int(11) NOT NULL,
   `gerecht_id` int(11) NOT NULL,
   `artikel_id` int(11) NOT NULL,
   `aantal` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `ingredient`
+--
+
+INSERT INTO `ingredient` (`id`, `gerecht_id`, `artikel_id`, `aantal`) VALUES
+(1, 2, 1, 1),
+(2, 2, 2, 1),
+(3, 2, 3, 1),
+(4, 4, 4, 4),
+(5, 4, 5, 2);
 
 -- --------------------------------------------------------
 
@@ -118,10 +143,10 @@ INSERT INTO `keuken_type` (`id`, `record_type`, `omschrijving`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Table structure for table `user`
 --
 
-CREATE TABLE `users` (
+CREATE TABLE `user` (
   `id` int(11) NOT NULL,
   `user_name` varchar(255) NOT NULL,
   `afbeelding` varchar(255) NOT NULL,
@@ -130,10 +155,10 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `users`
+-- Dumping data for table `user`
 --
 
-INSERT INTO `users` (`id`, `user_name`, `afbeelding`, `email`, `password`) VALUES
+INSERT INTO `user` (`id`, `user_name`, `afbeelding`, `email`, `password`) VALUES
 (1, 'Sarah', '1', 'sarah@hotmail.com', '1234');
 
 --
@@ -164,9 +189,9 @@ ALTER TABLE `gerecht_info`
   ADD KEY `users_fk` (`user_id`);
 
 --
--- Indexes for table `ingredients`
+-- Indexes for table `ingredient`
 --
-ALTER TABLE `ingredients`
+ALTER TABLE `ingredient`
   ADD PRIMARY KEY (`id`),
   ADD KEY `gerecht_id` (`gerecht_id`),
   ADD KEY `artikel_id` (`artikel_id`);
@@ -178,9 +203,9 @@ ALTER TABLE `keuken_type`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `users`
+-- Indexes for table `user`
 --
-ALTER TABLE `users`
+ALTER TABLE `user`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -191,7 +216,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `artikel`
 --
 ALTER TABLE `artikel`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `gerecht`
@@ -206,10 +231,10 @@ ALTER TABLE `gerecht_info`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `ingredients`
+-- AUTO_INCREMENT for table `ingredient`
 --
-ALTER TABLE `ingredients`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `ingredient`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `keuken_type`
@@ -218,9 +243,9 @@ ALTER TABLE `keuken_type`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT for table `users`
+-- AUTO_INCREMENT for table `user`
 --
-ALTER TABLE `users`
+ALTER TABLE `user`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
@@ -242,11 +267,11 @@ ALTER TABLE `gerecht_info`
   ADD CONSTRAINT `gerecht_fk` FOREIGN KEY (`gerecht_id`) REFERENCES `gerecht` (`id`);
 
 --
--- Constraints for table `ingredients`
+-- Constraints for table `ingredient`
 --
-ALTER TABLE `ingredients`
-  ADD CONSTRAINT `ingredients_ibfk_1` FOREIGN KEY (`artikel_id`) REFERENCES `artikel` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `ingredients_ibfk_2` FOREIGN KEY (`gerecht_id`) REFERENCES `gerecht` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `ingredient`
+  ADD CONSTRAINT `ingredient_ibfk_1` FOREIGN KEY (`artikel_id`) REFERENCES `artikel` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `ingredient_ibfk_2` FOREIGN KEY (`gerecht_id`) REFERENCES `gerecht` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
