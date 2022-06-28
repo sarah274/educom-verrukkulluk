@@ -15,12 +15,7 @@ class artikel {
         $result = mysqli_query($this->connection, $sql);
         $artikel = mysqli_fetch_array($result, MYSQLI_ASSOC);
 
-        echo 'Connected Succesfully';
-
         return($artikel);
-
-
     }
-
 
 }
