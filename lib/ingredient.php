@@ -3,20 +3,31 @@
 class ingredient {
 
     private $connection;
+    private $art;
 
     public function __construct($connection) {
         $this->connection = $connection;
+        $this->art = new artikel($connection);   
     }
 
-    public function selecteerIngredient ($ingredient_id) {
-        $sql= "SELECT * FROM `gerecht`
-         JOIN ingredient ON gerecht_id = ingredient.gerecht_id
+    private function selecteerArtikel($artikel_id) {
+        $artikel = $this->art->selecteerArtikel($artikel_id);
+        return($artikel);
+    }
 
-         JOIN artikel ON ingredient.artikel_id = artikel_id";
-
+    public function selecteerIngredient ($gerecht_id) {
+        $sql= "SELECT * FROM ingredient where gerecht_id = $gerecht_id";
+    
         $result = mysqli_query($this->connection, $sql);
-        $ingredient = mysqli_fetch_array($result, MYSQLI_ASSOC);
-       
-        return($ingredient);
+        while($ingredient = mysqli_fetch_array($result)) {
+            echo "<pre>";
+            $artikel = $this->selecteerArtikel($ingredient["artikel_id"]);
+            echo "--------------------------------------------------------";
+            var_dump($artikel);
+
+        }       
+    
+        return([]);
     }
+
 }
