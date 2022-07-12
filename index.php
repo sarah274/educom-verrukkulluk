@@ -21,24 +21,28 @@ $gerecht = new gerecht ($db->getConnection());
 
 /// VERWERK 
 // $data = $art->selecteerArtikel(1);
-// $data2 = $user->selecteerUser(3);
+$data2 = $user->selecteerUser(3);
 // $ing = $ingredient->selecteerIngredient(4);
 // $KT = $KT->selectKeukenType(1);
-$opmerking = $gi->selectgerechtInfo(2,"O");
-$favorite = $gi->selectgerechtInfo(2,"F");
-$bereidngswijze= $gi->selectgerechtInfo(2,"B");
-$waardering = $gi->selectgerechtInfo(2,"W");
-// $gerecht = $gerecht->selectgerecht(2);
+// $opmerking = $gi->selectgerechtInfo(2,"O");
+// $favorite = $gi->selectgerechtInfo(2,"F");
+// $bereidngswijze= $gi->selectgerechtInfo(2,"B");
+// $waardering = $gi->selectgerechtInfo(2,"W");
+$gerecht = $gerecht->selectgerecht(2);
+$ingredient = $ingredient->selecteerIngredient(2);
+// $calorie= $ingredientInfo ->calcCalories (2);
 
 echo "<pre>";
 
 /// RETURN
 // var_dump($data);
-// var_dump($data2);
+var_dump($data2);
 //  var_dump ($ing);
 // var_dump ($KT);
-var_dump ($opmerking);
-var_dump ($favorite);
-var_dump ($bereidngswijze);
-var_dump ($waardering);
-// var_dump ($gerecht);
+// var_dump ($opmerking);
+// var_dump ($favorite);
+// var_dump ($bereidngswijze);
+// var_dump ($waardering);
+var_dump ($gerecht);
+var_dump ($ingredient);
+// var_dump ($ingredientInfo);

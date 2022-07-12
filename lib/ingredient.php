@@ -21,7 +21,7 @@ class ingredient {
         $return  = [];
     
         $result = mysqli_query($this->connection, $sql);
-        while($ingredient = mysqli_fetch_array($result)) {
+        while($ingredient = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
 
             $artikel = $this->selecteerArtikel($ingredient["artikel_id"]);
           
@@ -34,7 +34,7 @@ class ingredient {
                 "artikel_cal" => $artikel["calorie"],
                 "artikel_eh" => $artikel["eenheid"],
                 "artikel_verpak" => $artikel["verpakking"],
-                "aantal" => $ingredient["aantal"],
+                "aantal" => $ingredient["hoeveelheid"],
                 "gerecht-id" =>$ingredient ["gerecht_id"]
             ];
 
