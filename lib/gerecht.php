@@ -25,13 +25,14 @@ class gerecht {
     }
 
 
-    private function calcCalories ($ingredient) {
+    private function calcCalories ($ingredienten) {
        
-    $ingredientInfo = array();
-    $sum= 0;
+        $sum= 0;
 
-        foreach ($ingredientInfo as $sum) {
-           $sum += $artikel_id ["calorie"] * ($ingredient ["hoeveelheid"] / $artikel_id ["verpakking"]);
+        foreach ($ingredienten as $ingredient) {   
+            
+                $sum += $ingredient[0]["artikel_cal"] * ($ingredient [0]["aantal"] / $ingredient [0]["artikel_verpak"]);
+            
         }
         return ($sum);
     }
@@ -45,9 +46,9 @@ class gerecht {
 
        while ($gerecht = mysqli_fetch_array($result, MYSQLI_ASSOC))
         {
-            $user = $this ->selecteerUser($gerecht ["user_id"]);
-            $ingredient = $this ->selecteerIngredient($gerecht["gerecht_id"]);
-            $ingredientInfo = $this ->calcCalories($ingredient)["calorie"];
+            $user = $this->selecteerUser($gerecht ["user_id"]);
+            $ingredienten = $this->selecteerIngredient($gerecht["gerecht_id"]);
+            $calorieen = $this->calcCalories($ingredienten);
 
                 $recipe[]= [
                 
@@ -59,7 +60,9 @@ class gerecht {
                 "titel"=>$gerecht ["titel"],
                 "korte"=>$gerecht ["korte_omschrijving"],
                 "lang"=>$gerecht ["lange_omschrijving"],
-                "foto"=>$gerecht ["afbeelding"]
+                "foto"=>$gerecht ["afbeelding"],
+                "ingredienten"=>$ingredienten,
+                "calorieen"=>$calorieen
                     
             ];
         }

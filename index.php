@@ -44,5 +44,4 @@ var_dump($data2);
 // var_dump ($bereidngswijze);
 // var_dump ($waardering);
 var_dump ($gerecht);
-var_dump ($ingredient);
-// var_dump ($ingredientInfo);
+// var_dump ($ingredient);
