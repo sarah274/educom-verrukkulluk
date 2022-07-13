@@ -4,13 +4,17 @@ class gerecht {
     private $connection;
     private $user;
     private $ingredient;
+    private $gerecht_info;
     private $calorie;
     private $price;
+    private $rating;
+   
 
     public function __construct($connection) {
         $this->connection = $connection;
         $this->user = new user ($connection);
         $this->ingredient = new ingredient ($connection);
+        $this->gerecht_info= new gerecht_info ($connection);
     }
 
 
@@ -20,10 +24,15 @@ class gerecht {
     }
 
 
-
     private function selecteerIngredient ($gerecht_id) {
         $ingredient= $this->ingredient->selecteerIngredient($gerecht_id);
         return ($ingredient);
+    }
+
+
+    private function selectgerechtInfo ($gerecht_id, $record_type) {
+        $gerecht_info= $this->gerecht_info->selectgerechtInfo ($gerecht_id, $record_type);
+        return ($gerecht_info);
     }
 
 
@@ -37,7 +46,6 @@ class gerecht {
     }
 
 
-
     private function calcPrice ($ingredienten) {
         $price= 0;
         foreach ($ingredienten as $ingredient) {
@@ -48,25 +56,48 @@ class gerecht {
     }
 
 
-    // private function selectgerechtInfo ($gerecht_id, $record_type) {
-    //     $gerecht_info= $this->gerecht_info->selectgerechtInfo($gerecht_id, $record_type);
-    //     return ($gerecht_info);
-    // }
-
-
-    private function selectRating ($gerechten_id, $record_type) {
-        
-            $rating= 0;
-
-            foreach ($gerechten_id as $gerecht_id) {
-
-                $rating +=  ($gerecht_id ["nummers"]) / count ($gerecht_id ["nummers"]);
-             }
-            
-
+    private function selectRating ($gerecht_id) {
+        $rating= $this->selectgerechtInfo($gerecht_id, "W");
+    
         return ($rating);
     }
 
+ 
+    private function calcRating ($ratings) {
+        
+        $rating= 0;
+        // $aantal= count($ratings);
+        // $total= array_sum($ratings);
+
+        // if ($aantal == 0) return (0);
+
+        foreach ($ratings as $rating) {
+
+            $ratings +=  array_sum($ratings) / count($ratings);
+        }
+            
+        return ($rating);
+    }
+
+
+    private function selectOpmerking ($gerecht_id) {
+        $opmerking= $this->selectgerechtInfo($gerecht_id, "O");
+        return ($opmerking);
+    }
+
+    private function selectSteps ($gerecht_id) {
+        $bereidngswijze= $this->selectgerechtInfo($gerecht_id, "B");
+        return ($bereidngswijze);
+    }
+
+    // private function selectKeukenType ($keukenType_id) {
+    //     $keukenType= $this->selectKeukenType($keukenType_id);
+    //     return ($keukenType);
+    // }
+
+
+
+  
 
    
     public function selectgerecht ($gerecht_id) {
@@ -77,18 +108,25 @@ class gerecht {
        while ($gerecht = mysqli_fetch_array($result, MYSQLI_ASSOC))
         {
             $user = $this->selecteerUser($gerecht ["user_id"]);
-            $ingredienten = $this->selecteerIngredient($gerecht_id);
-            
+            $ingredienten = $this->selecteerIngredient($gerecht["id"]);
+            $gerecht_info = $this->selectgerechtInfo($gerecht_id, "W", "O", "B");
 
             $calorieen = $this->calcCalories($ingredienten);
             $price= $this->calcPrice($ingredienten);
 
-            // $gerecht_info = $this->selectgerechtInfo($gerecht_id, $record_type);
-          
-          
-            if ($record_type == "W"){
-                $rating = $this->selectRating($gerechten_id ["nummers"]);
-            }
+            $ratings = $this->selectRating($gerecht["id"]);
+            $gemiddelde_rating= $this->calcRating ($ratings);
+
+            $opmerking= $this->selectOpmerking($gerecht["id"]);
+            $bereidngswijze= $this->selectSteps($gerecht["id"]);
+
+            // $keukenType= $this->selectKeukenType($keukenType_id);
+
+
+           
+       
+
+            
             
 
 
@@ -106,7 +144,12 @@ class gerecht {
                 "ingredienten"=>$ingredienten,
                 "calorieen"=>$calorieen,
                 "price" => $price,
-                "rating"=>$rating
+                "ratings"=>$ratings,
+                "opmerking"=>$opmerking,
+                "bereidngswijze" => $bereidngswijze,
+                // "KeukenType" =>$keukenType
+                
+                "gemiddelde_rating" => $gemiddelde_rating
                 
             ];
             
