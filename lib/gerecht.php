@@ -5,6 +5,7 @@ class gerecht {
     private $user;
     private $ingredient;
     private $calorie;
+    private $price;
 
     public function __construct($connection) {
         $this->connection = $connection;
@@ -19,22 +20,51 @@ class gerecht {
     }
 
 
-    private function selecteerIngredient ($ingredient) {
-        $ingredient= $this->ingredient->selecteerIngredient($ingredient);
+
+    private function selecteerIngredient ($gerecht_id) {
+        $ingredient= $this->ingredient->selecteerIngredient($gerecht_id);
         return ($ingredient);
     }
 
 
     private function calcCalories ($ingredienten) {
-       
-        $sum= 0;
-
+        $calorie= 0;
         foreach ($ingredienten as $ingredient) {   
             
-                $sum += $ingredient[0]["artikel_cal"] * ($ingredient [0]["aantal"] / $ingredient [0]["artikel_verpak"]);
-            
+                $calorie += $ingredient["artikel_cal"] * ($ingredient ["aantal"] / $ingredient ["artikel_verpak"]);   
         }
-        return ($sum);
+        return ($calorie);
+    }
+
+
+
+    private function calcPrice ($ingredienten) {
+        $price= 0;
+        foreach ($ingredienten as $ingredient) {
+
+            $price += $ingredient ["artikel_prijs"];
+        }
+        return ($price);
+    }
+
+
+    // private function selectgerechtInfo ($gerecht_id, $record_type) {
+    //     $gerecht_info= $this->gerecht_info->selectgerechtInfo($gerecht_id, $record_type);
+    //     return ($gerecht_info);
+    // }
+
+
+    private function selectRating ($gerechten_id, $record_type) {
+        
+            $rating= 0;
+
+            foreach ($gerechten_id as $gerecht_id) {
+
+                $rating +=  ($gerecht_id ["nummers"]) / count ($gerecht_id ["nummers"]);
+             }
+            
+
+        return ($rating);
     }
 
 
@@ -47,8 +77,20 @@ class gerecht {
        while ($gerecht = mysqli_fetch_array($result, MYSQLI_ASSOC))
         {
             $user = $this->selecteerUser($gerecht ["user_id"]);
-            $ingredienten = $this->selecteerIngredient($gerecht["gerecht_id"]);
+            $ingredienten = $this->selecteerIngredient($gerecht_id);
+            
+
             $calorieen = $this->calcCalories($ingredienten);
+            $price= $this->calcPrice($ingredienten);
+
+            // $gerecht_info = $this->selectgerechtInfo($gerecht_id, $record_type);
+          
+          
+            if ($record_type == "W"){
+                $rating = $this->selectRating($gerechten_id ["nummers"]);
+            }
+            
+
 
                 $recipe[]= [
                 
@@ -62,11 +104,13 @@ class gerecht {
                 "lang"=>$gerecht ["lange_omschrijving"],
                 "foto"=>$gerecht ["afbeelding"],
                 "ingredienten"=>$ingredienten,
-                "calorieen"=>$calorieen
-                    
+                "calorieen"=>$calorieen,
+                "price" => $price,
+                "rating"=>$rating
+                
             ];
+            
         }
-        
         return ($recipe);
     }
 }
