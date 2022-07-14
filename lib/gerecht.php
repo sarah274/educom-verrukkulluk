@@ -5,6 +5,7 @@ class gerecht {
     private $user;
     private $ingredient;
     private $gerecht_info;
+    private $keukenType;
     private $calorie;
     private $price;
     private $rating;
@@ -15,6 +16,7 @@ class gerecht {
         $this->user = new user ($connection);
         $this->ingredient = new ingredient ($connection);
         $this->gerecht_info= new gerecht_info ($connection);
+        $this->keukenType= new keukenType ($connection);
     }
 
 
@@ -33,6 +35,12 @@ class gerecht {
     private function selectgerechtInfo ($gerecht_id, $record_type) {
         $gerecht_info= $this->gerecht_info->selectgerechtInfo ($gerecht_id, $record_type);
         return ($gerecht_info);
+    }
+
+
+    private function selectKeukenType ($keukenType_id) {
+        $keukenType= $this->keukenType->selectKeukenType ($keukenType_id);
+        return ($keukenType);
     }
 
 
@@ -65,18 +73,18 @@ class gerecht {
  
     private function calcRating ($ratings) {
         
-        $rating= 0;
-        // $aantal= count($ratings);
-        // $total= array_sum($ratings);
-
-        // if ($aantal == 0) return (0);
+        $total= 0;
+        $aantal= count($ratings);
+       
+        if ($aantal == 0) return (0);
 
         foreach ($ratings as $rating) {
 
-            $ratings +=  array_sum($ratings) / count($ratings);
+            $total +=  $rating["nummeriekveld"];
         }
+        $gemiddelde_rating = $total / $aantal;
             
-        return ($rating);
+        return ($gemiddelde_rating);
     }
 
 
@@ -85,19 +93,11 @@ class gerecht {
         return ($opmerking);
     }
 
+
     private function selectSteps ($gerecht_id) {
         $bereidngswijze= $this->selectgerechtInfo($gerecht_id, "B");
         return ($bereidngswijze);
     }
-
-    // private function selectKeukenType ($keukenType_id) {
-    //     $keukenType= $this->selectKeukenType($keukenType_id);
-    //     return ($keukenType);
-    // }
-
-
-
-  
 
    
     public function selectgerecht ($gerecht_id) {
@@ -110,6 +110,8 @@ class gerecht {
             $user = $this->selecteerUser($gerecht ["user_id"]);
             $ingredienten = $this->selecteerIngredient($gerecht["id"]);
             $gerecht_info = $this->selectgerechtInfo($gerecht_id, "W", "O", "B");
+            $keukenType= $this->selectKeukenType($gerecht ["keuken_id"]);
+            $keukenType=$this->selectKeukenType($gerecht ["type_id"]);
 
             $calorieen = $this->calcCalories($ingredienten);
             $price= $this->calcPrice($ingredienten);
@@ -120,22 +122,12 @@ class gerecht {
             $opmerking= $this->selectOpmerking($gerecht["id"]);
             $bereidngswijze= $this->selectSteps($gerecht["id"]);
 
-            // $keukenType= $this->selectKeukenType($keukenType_id);
-
-
            
-       
-
-            
-            
-
-
                 $recipe[]= [
                 
                 "gerecht" => $gerecht ["id"],
-                "keuken" => $gerecht ["keuken_id"],
-                "type"=> $gerecht ["type_id"], 
-                "user"=>$gerecht ["user_id"],
+                "user" => $user,
+                // "user"=>$gerecht ["user_id"],
                 "datum" => $gerecht ["datum"],
                 "titel"=>$gerecht ["titel"],
                 "korte"=>$gerecht ["korte_omschrijving"],
@@ -145,11 +137,14 @@ class gerecht {
                 "calorieen"=>$calorieen,
                 "price" => $price,
                 "ratings"=>$ratings,
+                "gemiddelde_rating" => $gemiddelde_rating,
                 "opmerking"=>$opmerking,
                 "bereidngswijze" => $bereidngswijze,
-                // "KeukenType" =>$keukenType
+                // "keuken" =>$keukenType,
+                // "Type"=>$keukenType 
+                "keuken" => $gerecht ["keuken_id"],
+                "type"=> $gerecht ["type_id"]
                 
-                "gemiddelde_rating" => $gemiddelde_rating
                 
             ];
             
