@@ -100,8 +100,11 @@ class gerecht {
     }
 
    
-    public function selectgerecht ($gerecht_id) {
-        $sql = "SELECT * FROM gerecht WHERE id = $gerecht_id";
+    public function selectgerecht ($gerecht_id = null) {
+        $sql = "SELECT * FROM gerecht";
+        if(!is_null($gerecht_id)) {
+            $sql .= " WHERE id = $gerecht_id";
+        }
 
         $result=mysqli_query($this->connection, $sql);
 
@@ -110,8 +113,8 @@ class gerecht {
             $user = $this->selecteerUser($gerecht ["user_id"]);
             $ingredienten = $this->selecteerIngredient($gerecht["id"]);
             $gerecht_info = $this->selectgerechtInfo($gerecht_id, "W", "O", "B");
-            $keukenType= $this->selectKeukenType($gerecht ["keuken_id"]);
-            $keukenType=$this->selectKeukenType($gerecht ["type_id"]);
+            $keuken= $this->selectKeukenType($gerecht ["keuken_id"]);
+            $type=$this->selectKeukenType($gerecht ["type_id"]);
 
             $calorieen = $this->calcCalories($ingredienten);
             $price= $this->calcPrice($ingredienten);
@@ -127,7 +130,6 @@ class gerecht {
                 
                 "gerecht" => $gerecht ["id"],
                 "user" => $user,
-                // "user"=>$gerecht ["user_id"],
                 "datum" => $gerecht ["datum"],
                 "titel"=>$gerecht ["titel"],
                 "korte"=>$gerecht ["korte_omschrijving"],
@@ -140,12 +142,9 @@ class gerecht {
                 "gemiddelde_rating" => $gemiddelde_rating,
                 "opmerking"=>$opmerking,
                 "bereidngswijze" => $bereidngswijze,
-                // "keuken" =>$keukenType,
-                // "Type"=>$keukenType 
-                "keuken" => $gerecht ["keuken_id"],
-                "type"=> $gerecht ["type_id"]
-                
-                
+                "keuken" => $keuken ["omschrijving"],
+                "type"=> $type ["omschrijving"]
+          
             ];
             
         }
