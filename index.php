@@ -7,6 +7,7 @@ require_once ("lib/ingredient.php");
 require_once ("lib/keukenType.php");
 require_once ("lib/gerecht-info.php");
 require_once ("lib/gerecht.php");
+require_once ("lib/recipe_gerechten.php");
 
 /// INIT
 $db = new database();
@@ -16,6 +17,7 @@ $ingredient = new ingredient ($db->getConnection());
 $KT= new keukenType($db->getConnection());
 $gi= new gerecht_info ($db->getConnection());
 $gerecht = new gerecht ($db->getConnection());
+$gerecht = new recipe ($db->getConnection());
 
 
 
@@ -29,7 +31,9 @@ $gerecht = new gerecht ($db->getConnection());
 // $bereidngswijze= $gi->selectgerechtInfo(2,"B");
 // $waardering = $gi->selectgerechtInfo(2,"W");
 // $ingredient = $ingredient->selecteerIngredient(2);
-$gerecht = $gerecht->selectgerecht(2);
+// $gerecht = $gerecht->selectgerecht(2);
+$gerecht = $gerecht->selectgerecht();
+
 
 
 
@@ -45,4 +49,5 @@ echo "<pre>";
 // var_dump ($bereidngswijze);
 // var_dump ($waardering);
 // var_dump ($ingredient);
+// var_dump ($gerecht);
 var_dump ($gerecht);
